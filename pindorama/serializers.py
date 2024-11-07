@@ -4,32 +4,32 @@ from pindorama.models import Tipos, Formas, Origens, Criaturas, AlbumCriaturas, 
 class TiposSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tipos
-        fields = ('tipo', 'descricao')
+        fields = ('id', 'tipo', 'descricao')
 
 class FormasSerializer(serializers.ModelSerializer):
     class Meta:
         model = Formas
-        fields = ('forma', 'descricao')
+        fields = ('id', 'forma', 'descricao')
 
 class OrigensSerializer(serializers.ModelSerializer):
     class Meta:
         model = Origens
-        fields = ('origem', 'descricao')
+        fields = ('id', 'origem', 'descricao')
 
 class CriaturasSerializer(serializers.ModelSerializer):
     class Meta:
         model = Criaturas
-        fields = ('criatura', 'tipo', 'forma', 'origem', 'foto_perfil', 'descricao')
+        fields = ('id', 'criatura', 'tipo', 'forma', 'origem', 'foto_perfil', 'descricao')
 
 class AlbumCriaturasSerializer(serializers.ModelSerializer):
     class Meta:
         model = AlbumCriaturas
-        fields = ('criatura', 'fonte', 'foto')
+        fields = ('id', 'criatura', 'fonte', 'foto')
 
 class LendasCriaturasSerializer(serializers.ModelSerializer):
     class Meta:
         model = LendasCriaturas
-        fields = ('criatura', 'titulo', 'estoria', 'fonte')
+        fields = ('id', 'criatura', 'titulo', 'estoria', 'fonte')
 
 class ListaAlbumPorCriaturaSerializer(serializers.ModelSerializer):
     nome_criatura = serializers.ReadOnlyField(source = 'criatura.criatura')
@@ -47,7 +47,7 @@ class ListaAlbumPorCriaturaSerializer(serializers.ModelSerializer):
         return obj.fonte
     
 class ListaLendasPorCriaturasSerializer(serializers.ModelSerializer):
-    nome_criatura = serializers.ReadOnlyField(source = 'criatura_criatura')
+    nome_criatura = serializers.ReadOnlyField(source = 'criatura.criatura')
     titulo = serializers.SerializerMethodField()
     estoria = serializers.SerializerMethodField()
     fonte = serializers.SerializerMethodField()

@@ -75,7 +75,7 @@ class LendasCriaturas(models.Model):
         on_delete=models.CASCADE,
         related_name='lendas'
     )
-    titulo = models.CharField(max_length=20)
+    titulo = models.CharField(max_length=30)
     estoria = models.TextField()
     fonte = models.CharField(max_length=100)
     data_criacao = models.DateField(auto_now_add=True)
