@@ -6,6 +6,8 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from datetime import date
 from pindorama.models import AlbumCriaturas
 from pindorama.serializers import AlbumCriaturasSerializer
+from django.conf import settings
+import os
 
 class AlbumCriaturasTestCase(APITestCase):
     fixtures = ['dados_teste.json']
@@ -24,6 +26,12 @@ class AlbumCriaturasTestCase(APITestCase):
                 content=b'\x47\x49\x46\x38\x39\x61\x01\x00\x01\x00\x80\xff\x00\xff\xff\xff\x00\x00\x00\x21\xf9\x04\x01\x0a\x00\x01\x00\x2c\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x02\x44\x01\x00\x3b',
                 content_type='image/jpeg'
             )
+        
+    def tearDown(self):
+        media_root = settings.MEDIA_ROOT
+        imagem_teste_caminho = os.path.join(media_root, 'test_image.jpg')
+        if os.path.exists(imagem_teste_caminho):
+            os.remove(imagem_teste_caminho)
 
     def test_verifica_requisicao_get_lista_albums(self):
         'Teste que verifica requisição GET para lista de Album'
@@ -44,7 +52,7 @@ class AlbumCriaturasTestCase(APITestCase):
 
         self.assertEqual(response.data['id'], dados_serializados['id'])
         self.assertEqual(response.data['criatura'], dados_serializados['criatura'])
-        self.assertEqual(response.data['foto'].split('server')[1], dados_serializados['foto'])
+        self.assertEqual(response.data['foto'], dados_serializados['foto'])
         self.assertEqual(response.data['fonte'], dados_serializados['fonte'])
 
 
