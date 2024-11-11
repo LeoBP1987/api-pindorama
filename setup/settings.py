@@ -1,5 +1,6 @@
 from pathlib import Path, os
 from dotenv import load_dotenv
+import dj_database_url
 
 load_dotenv()
 
@@ -13,7 +14,7 @@ SECRET_KEY = str(os.getenv('SECRET_KEY'))
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['.herokuapp.com']
 
 
 # Application definition
@@ -66,15 +67,12 @@ WSGI_APPLICATION = 'setup.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': str(os.getenv('nome_bd')),
-        'USER': str(os.getenv('usuario_bd')),
-        'PASSWORD': str(os.getenv('senha_bd')),
-        'HOST': str(os.getenv('host_bd')),
-        'PORT': '5432'
+    'default': dj_database_url.config(
+            default=os.environ['DATABASE_URL'],
+            conn_max_age=600,
+            ssl_require=True,  # Isso assegura que a SSL é requerida
+        )
     }
-}
 
 
 # Password validation
