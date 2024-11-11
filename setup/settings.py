@@ -135,6 +135,8 @@ AWS_HEADER = {
 
 DEFAULT_FILE_STORAGE = "storages.backends.s3.S3Storage"
 
+STATICFILES_STORAGE = "storages.backends.s3.S3Storage"
+
 STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
