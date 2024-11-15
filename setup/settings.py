@@ -68,15 +68,7 @@ WSGI_APPLICATION = 'setup.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-if 'HEROKU' in os.environ:  # Assumindo que você define uma variável de ambiente HEROKU no Heroku
-    DATABASES = {
-    'default': dj_database_url.config(
-            default=os.environ['DATABASE_URL'],
-            conn_max_age=600,
-            ssl_require=True,
-        )
-    }
-else:
+if os.getenv('DJANGO_DEV'):
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
@@ -86,6 +78,14 @@ else:
             'HOST': str(os.getenv('host_bd')),
             'PORT': 5432,
         }
+    }
+else:
+    DATABASES = {
+    'default': dj_database_url.config(
+            default=os.environ['DATABASE_URL'],
+            conn_max_age=600,
+            ssl_require=True,
+        )
     }
 
 # Password validation
