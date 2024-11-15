@@ -8,6 +8,7 @@ from pindorama.models import Criaturas, Tipos, Formas, Origens
 from pindorama.serializers import CriaturasSerializer
 from django.conf import settings
 import os
+import shutil
 
 class CriaturasTestCase(APITestCase):
     fixtures = ['dados_teste.json']
@@ -29,9 +30,8 @@ class CriaturasTestCase(APITestCase):
         
     def tearDown(self):
         media_root = settings.MEDIA_ROOT
-        imagem_teste_caminho = os.path.join(media_root, 'test_image.jpg')
-        if os.path.exists(imagem_teste_caminho):
-            os.remove(imagem_teste_caminho)
+        if os.path.exists(media_root):
+            shutil.rmtree(media_root)
     
     def test_verifica_requisicao_get_lista_criaturas(self):
         'Teste que verifica requisição GET para lista de Criaturas'
@@ -55,7 +55,7 @@ class CriaturasTestCase(APITestCase):
         self.assertEqual(response.data['tipo'], dados_serializados['tipo'])
         self.assertEqual(response.data['forma'], dados_serializados['forma'])
         self.assertEqual(response.data['origem'], dados_serializados['origem'])
-        self.assertEqual(response.data['foto_perfil'], dados_serializados['foto_perfil'])
+        self.assertEqual(response.data['foto_perfil'].split('/testserver', 1)[1], dados_serializados['foto_perfil'])
         self.assertEqual(response.data['descricao'], dados_serializados['descricao'])
 
     def test_verifica_requisicao_post_um_criatura(self):

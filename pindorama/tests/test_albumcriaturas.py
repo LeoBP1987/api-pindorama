@@ -8,6 +8,7 @@ from pindorama.models import AlbumCriaturas
 from pindorama.serializers import AlbumCriaturasSerializer
 from django.conf import settings
 import os
+import shutil
 
 class AlbumCriaturasTestCase(APITestCase):
     fixtures = ['dados_teste.json']
@@ -29,9 +30,8 @@ class AlbumCriaturasTestCase(APITestCase):
         
     def tearDown(self):
         media_root = settings.MEDIA_ROOT
-        imagem_teste_caminho = os.path.join(media_root, 'test_image.jpg')
-        if os.path.exists(imagem_teste_caminho):
-            os.remove(imagem_teste_caminho)
+        if os.path.exists(media_root):
+            shutil.rmtree(media_root)
 
     def test_verifica_requisicao_get_lista_albums(self):
         'Teste que verifica requisição GET para lista de Album'
@@ -52,7 +52,7 @@ class AlbumCriaturasTestCase(APITestCase):
 
         self.assertEqual(response.data['id'], dados_serializados['id'])
         self.assertEqual(response.data['criatura'], dados_serializados['criatura'])
-        self.assertEqual(response.data['foto'], dados_serializados['foto'])
+        self.assertEqual(response.data['foto'].split('/testserver', 1)[1], dados_serializados['foto'])
         self.assertEqual(response.data['fonte'], dados_serializados['fonte'])
 
 

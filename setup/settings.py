@@ -14,7 +14,7 @@ SECRET_KEY = str(os.getenv('SECRET_KEY'))
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['.herokuapp.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.herokuapp.com']
 
 
 # Application definition
@@ -29,7 +29,8 @@ INSTALLED_APPS = [
     'drf_yasg',
     'django_filters',
     'pindorama.apps.PindoramaConfig',
-    'rest_framework'
+    'rest_framework',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -67,14 +68,25 @@ WSGI_APPLICATION = 'setup.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
+if 'HEROKU' in os.environ:  # Assumindo que você define uma variável de ambiente HEROKU no Heroku
+    DATABASES = {
     'default': dj_database_url.config(
             default=os.environ['DATABASE_URL'],
             conn_max_age=600,
             ssl_require=True,
         )
     }
-
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': str(os.getenv('nome_bd')),
+            'USER': str(os.getenv('usuario_bd')),
+            'PASSWORD': str(os.getenv('senha_bd')),
+            'HOST': str(os.getenv('host_bd')),
+            'PORT': 5432,
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -106,42 +118,58 @@ USE_I18N = True
 
 USE_TZ = True
 
-# AWS Configurações
+#Configurando Arquivos Estáticos na AWS
 
-AWS_ACCESS_KEY_ID = str(os.getenv('AWS_ACCESS_KEY_ID'))
+if os.getenv('DJANGO_ENV') and os.getenv('DJANGO_ENV') == 'test':
 
-AWS_SECRET_ACCESS_KEY = str(os.getenv('AWS_SECRET_ACCESS_KEY'))
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+    STATIC_URL = '/static/'
 
-AWS_STORAGE_BUCKET_NAME = 'apindorama'
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+    MEDIA_URL = '/media/'
 
-AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+else :
 
-AWS_DEFAULT_ACL = 'public-read'
+    STORAGES = {
+        "default": {
+            "BACKEND": "storages.backends.s3.S3Storage",
+            "OPTIONS": {
+                "access_key": str(os.getenv("AWS_ACCESS_KEY_ID")),
+                "secret_key": str(os.getenv("AWS_SECRET_ACCESS_KEY")),
+                "bucket_name": str(os.getenv("AWS_STORAGE_BUCKET_NAME")),
+                "custom_domain": f"{str(os.getenv("AWS_STORAGE_BUCKET_NAME"))}.s3.amazonaws.com",
+                "location": "static",  
+            },
+        },
+        "staticfiles": {
+            "BACKEND": "storages.backends.s3.S3Storage",
+            "OPTIONS": {
+                "access_key": str(os.getenv("AWS_ACCESS_KEY_ID")),
+                "secret_key": str(os.getenv("AWS_SECRET_ACCESS_KEY")),
+                "bucket_name": str(os.getenv("AWS_STORAGE_BUCKET_NAME")),
+                "custom_domain": f"{str(os.getenv("AWS_STORAGE_BUCKET_NAME"))}.s3.amazonaws.com",
+                "location": "static", 
+            },
+        },
+    }
 
-AWS_S3_OBJECT_PARAMETERS = {
-    'CacheControl': 'max-age=86400',
-}
+    AWS_DEFAULT_ACL = 'public-read'
 
-AWS_QUERYSTRING_AUTH = False
+    AWS_S3_OBJECT_PARAMETERS = {
+        'CacheControl': 'max-age=86400',
+    }
 
-AWS_HEADER = {
-    'Access-Control-Allow-Origin': '*',
-}
+    AWS_LOCATION = 'static'
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.1/howto/static-files/
+    AWS_QUERYSTRING_AUTH = False
 
-DEFAULT_FILE_STORAGE = "storages.backends.s3.S3Storage"
+    AWS_HEADER = {
+        'Access-Control-Allow-Origin': '*',
+    }
 
-STATIC_URL = 'static/'
+    STATIC_URL = 'https://pindorama-s3.s3.amazonaws.com/static/'
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
-# Media
-
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
-MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/media/'
+    MEDIA_URL = 'https://pindorama-s3.s3.amazonaws.com/media/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

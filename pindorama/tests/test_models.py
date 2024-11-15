@@ -27,6 +27,7 @@ def cria_instancias_sem_imagens(self):
     return {'tipo':self.tipo, 'forma':self.forma, 'origem':self.origem}
 
 def cria_instancias_de_criatura(self):
+
     instancias = cria_instancias_sem_imagens(self)
 
     self.criatura = Criaturas.objects.create(
@@ -89,12 +90,8 @@ class ModelCriaturasTestCase(TestCase):
 
     def tearDown(self):
         media_root = settings.MEDIA_ROOT
-        hoje = date.today()
-        diretorio_image = f'{media_root}\\foto_perfil\\{hoje.year}\\{str(hoje.month).zfill(2)}\\{str(hoje.day).zfill(2)}\\'
-        nome_arquivo = os.path.basename(self.criatura.foto_perfil.name)
-        imagem_teste_caminho = os.path.join(diretorio_image, nome_arquivo)
-        if os.path.exists(imagem_teste_caminho):
-            os.remove(imagem_teste_caminho)
+        if os.path.exists(media_root):
+            shutil.rmtree(media_root)
 
     def test_verifica_atributos_modelo_criaturas(self):
         'Teste que verifica atributos do modelo de Criaturas'
@@ -112,7 +109,6 @@ class ModelCriaturasTestCase(TestCase):
 
 class ModelAlbumCriaturasTestCase(TestCase):
     def setUp(self):
-
         self.criatura = cria_instancias_de_criatura(self)
 
         self.album = AlbumCriaturas.objects.create(
@@ -128,17 +124,8 @@ class ModelAlbumCriaturasTestCase(TestCase):
 
     def tearDown(self):
         media_root = settings.MEDIA_ROOT
-        hoje = date.today()
-        diretorio_image = f'{media_root}\\foto_perfil\\{hoje.year}\\{str(hoje.month).zfill(2)}\\{str(hoje.day).zfill(2)}\\'
-        nome_arquivo = os.path.basename(self.criatura.foto_perfil.name)
-        imagem_teste_caminho = os.path.join(diretorio_image, nome_arquivo)
-        if os.path.exists(imagem_teste_caminho):
-            os.remove(imagem_teste_caminho)
-
-        nome_arquivo = unidecode(self.criatura.criatura).lower()
-        diretorio_foto = f'{media_root}\\album\\{nome_arquivo}'
-        if os.path.exists(diretorio_foto):
-            shutil.rmtree(diretorio_foto)
+        if os.path.exists(media_root):
+            shutil.rmtree(media_root)
 
     def test_verifica_atributos_modelo_album_criaturas(self):
         'Teste que verifica atributos do modelo de Album Criaturas'

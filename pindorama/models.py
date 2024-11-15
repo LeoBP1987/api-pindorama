@@ -52,7 +52,8 @@ class Criaturas(models.Model):
 def upload_to_album(instance, filename):
 
     cod = len(AlbumCriaturas.objects.filter(criatura=instance.criatura)) + 1
-    nome = unidecode(instance.criatura.criatura).lower()
+    nome_sem_acento = unidecode(instance.criatura.criatura).lower()
+    nome = nome_sem_acento.replace(" ", "-")
 
     return f'album/{nome}/{nome}-{cod}{filename[-4:]}'
     
