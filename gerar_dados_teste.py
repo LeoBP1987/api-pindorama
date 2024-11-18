@@ -68,6 +68,7 @@ for _ in range(10):
         "origem": random.randint(1, 10),
         "foto_perfil": r"semimagem/semimage.jpg",
         "descricao": faker.text(max_nb_chars=200),
+        "modo": faker.text(max_nb_chars=10),
         "data_criacao": faker.date()
     }}
     dados.append(criatura)
@@ -100,6 +101,34 @@ for _ in range(10):
         "data_criacao": faker.date()
     }}
     dados.append(lendas)
+
+# Criando arquivos testes para model etiquetas
+contador = 0
+for _ in range(10):
+
+    contador += 1
+
+    etiquetas = {"model": "pindorama.EtiquetasCriaturas", "pk":contador, "fields": {
+        "criatura": random.randint(1,10),
+        "etiqueta": faker.text(max_nb_chars=20),
+        "data_criacao": faker.date()
+    }}
+    dados.append(etiquetas)
+
+# Criando arquivos testes para model elementos
+contador = 0
+for _ in range(10):
+
+    contador += 1
+
+    elementos = {"model": "pindorama.Elementos", "pk":contador, "fields": {
+        "elemento": faker.text(max_nb_chars=20),
+        "tipo": faker.text(max_nb_chars=20),
+        "descricao": faker.text(max_nb_chars=200),
+        "foto_elemento": r"semimagem/semimage.jpg",
+        "data_criacao": faker.date()
+    }}
+    dados.append(elementos)
 
 with open('dados_teste.json', 'w', encoding='utf-8') as f:
     json.dump(dados, f, ensure_ascii=False, indent=4)

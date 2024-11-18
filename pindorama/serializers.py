@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from pindorama.models import Tipos, Formas, Origens, Criaturas, AlbumCriaturas, LendasCriaturas
+from pindorama.models import Tipos, Formas, Origens, Criaturas, AlbumCriaturas, LendasCriaturas, EtiquetasCriaturas, Elementos
+from pindorama.validators import nome_invalido
 
 class TiposSerializer(serializers.ModelSerializer):
     class Meta:
@@ -19,7 +20,7 @@ class OrigensSerializer(serializers.ModelSerializer):
 class CriaturasSerializer(serializers.ModelSerializer):
     class Meta:
         model = Criaturas
-        fields = ('id', 'criatura', 'tipo', 'forma', 'origem', 'foto_perfil', 'descricao')
+        fields = ('id', 'criatura', 'tipo', 'forma', 'origem', 'foto_perfil', 'descricao', 'modo')
 
 class AlbumCriaturasSerializer(serializers.ModelSerializer):
     class Meta:
@@ -30,6 +31,24 @@ class LendasCriaturasSerializer(serializers.ModelSerializer):
     class Meta:
         model = LendasCriaturas
         fields = ('id', 'criatura', 'titulo', 'estoria', 'fonte')
+
+class EtiquetasCriaturasSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EtiquetasCriaturas
+        fields = ('id', 'criatura', 'etiqueta')
+
+    def validate(self, dados):
+        etiqueta = dados.get('etiqueta', None)
+
+        if etiqueta is None or nome_invalido(dados['etiqueta']):
+            raise serializers.ValidationError({'etiqueta':'A etiqueta não pode conter espaços e caracteres especiais.'})
+        
+        return dados
+
+class ElementosSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Elementos
+        fields = ('id', 'elemento', 'tipo', 'descricao', 'foto_elemento')
 
 class ListaAlbumPorCriaturaSerializer(serializers.ModelSerializer):
     nome_criatura = serializers.ReadOnlyField(source = 'criatura.criatura')
@@ -64,6 +83,17 @@ class ListaLendasPorCriaturasSerializer(serializers.ModelSerializer):
     
     def get_fonte(self, obj):
         return obj.fonte
+    
+class ListaEtiquetasPorCriaturaSerializer(serializers.ModelSerializer):
+    nome_criatura = serializers.ReadOnlyField(source = 'criatura.criatura')
+    etiqueta = serializers.SerializerMethodField()
+
+    class Meta:
+        model = AlbumCriaturas
+        fields = ('nome_criatura', 'etiqueta')
+
+    def get_etiqueta(self, obj):
+        return obj.etiqueta
     
 class CriaturasPorTipoSerializers(serializers.ModelSerializer):
     criatura = serializers.SerializerMethodField()

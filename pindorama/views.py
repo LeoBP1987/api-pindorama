@@ -1,9 +1,9 @@
 from rest_framework import viewsets, generics, filters
-from pindorama.models import Tipos, Formas, Origens, Criaturas, AlbumCriaturas, LendasCriaturas
+from pindorama.models import Tipos, Formas, Origens, Criaturas, AlbumCriaturas, LendasCriaturas, EtiquetasCriaturas, Elementos
 from pindorama.serializers import TiposSerializer, FormasSerializer, OrigensSerializer, CriaturasSerializer, \
     AlbumCriaturasSerializer, LendasCriaturasSerializer, ListaAlbumPorCriaturaSerializer, \
     ListaLendasPorCriaturasSerializer, CriaturasPorTipoSerializers, CriaturasPorFormaSerializers, \
-    CriaturasPorOrigemSerializers
+    CriaturasPorOrigemSerializers, EtiquetasCriaturasSerializer, ElementosSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 
 class TipoViewSet(viewsets.ModelViewSet):
@@ -33,6 +33,13 @@ class CriaturasViewSet(viewsets.ModelViewSet):
     ordering_fields = ['criatura', ]
     search_fields = ['criatura', 'tipo', 'forma', 'origem', ]
 
+class EtiquetasCriaturasViewSet(viewsets.ModelViewSet):
+    queryset = EtiquetasCriaturas.objects.all().order_by('criatura')
+    serializer_class = EtiquetasCriaturasSerializer
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
+    ordering_fields = ['criatura', ]
+    search_fields = ['criatura', ]
+
 class AlbumCriaturasViewSet(viewsets.ModelViewSet):
     queryset = AlbumCriaturas.objects.all().order_by('criatura')
     serializer_class = AlbumCriaturasSerializer
@@ -47,6 +54,13 @@ class LendasCriaturasViewSet(viewsets.ModelViewSet):
     ordering_fields = ['criatura', ]
     search_fields = ['criatura', ]
 
+class ElementosViewSet(viewsets.ModelViewSet):
+    queryset = Elementos.objects.all().order_by('elemento')
+    serializer_class = ElementosSerializer
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
+    ordering_fields = ['elemento', ]
+    search_fields = ['elemento', ]
+
 class ListaAlbumPorCriaturaViewSet(generics.ListAPIView):
     
     def get_queryset(self):
@@ -59,6 +73,14 @@ class ListaLendasPorCriaturaViewSet(generics.ListAPIView):
 
     def get_queryset(self):
         queryset = LendasCriaturas.objects.filter(criatura_id=self.kwargs['id']).order_by('id')
+        return queryset
+    
+    serializer_class = ListaLendasPorCriaturasSerializer
+
+class ListaEtiquetasPorCriaturaViewSet(generics.ListAPIView):
+
+    def get_queryset(self):
+        queryset = EtiquetasCriaturas.objects.filter(criatura_id=self.kwargs['id']).order_by('id')
         return queryset
     
     serializer_class = ListaLendasPorCriaturasSerializer

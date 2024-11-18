@@ -1,9 +1,9 @@
 from django.test import TestCase
-from pindorama.models import Tipos, Formas, Origens, Criaturas, AlbumCriaturas, LendasCriaturas
+from pindorama.models import Tipos, Formas, Origens, Criaturas, AlbumCriaturas, LendasCriaturas, EtiquetasCriaturas, Elementos
 from pindorama.serializers import TiposSerializer, FormasSerializer, OrigensSerializer, CriaturasSerializer, \
     AlbumCriaturasSerializer, LendasCriaturasSerializer, ListaAlbumPorCriaturaSerializer, \
     ListaLendasPorCriaturasSerializer, CriaturasPorTipoSerializers, CriaturasPorFormaSerializers, \
-    CriaturasPorOrigemSerializers
+    CriaturasPorOrigemSerializers, EtiquetasCriaturasSerializer, ListaEtiquetasPorCriaturaSerializer, ElementosSerializer
 
 class SerializerTiposTestCase(TestCase):
     fixtures = ['dados_teste.json']
@@ -86,7 +86,7 @@ class SerializerCriaturasTestCase(TestCase):
 
         dados = self.criatura.serializers.data
 
-        self.assertEqual(set(dados.keys()), set(['id', 'criatura', 'tipo', 'forma', 'origem', 'foto_perfil', 'descricao']))
+        self.assertEqual(set(dados.keys()), set(['id', 'criatura', 'tipo', 'forma', 'origem', 'foto_perfil', 'descricao', 'modo']))
 
     def test_verifica_conteudos_serializados_de_criaturas(self):
         'Teste que verifica o conteudo dos campos de Criaturas'
@@ -100,6 +100,29 @@ class SerializerCriaturasTestCase(TestCase):
         self.assertEqual(dados['origem'], self.criatura.origem.id)
         self.assertEqual(dados['foto_perfil'], self.criatura.foto_perfil.url)
         self.assertEqual(dados['descricao'], self.criatura.descricao)
+
+class SerializerEtiquetasCriaturasTestCase(TestCase):
+    fixtures = ['dados_teste.json']
+
+    def setUp(self):
+        self.etiqueta = EtiquetasCriaturas.objects.get(id=5)
+        self.etiqueta.serializers = EtiquetasCriaturasSerializer(instance=self.etiqueta)
+
+    def test_verifica_campos_serializados_de_etiquetas(self):
+        'Teste que verifica os campos serializados de Etiquetas'
+
+        dados = self.etiqueta.serializers.data
+
+        self.assertEqual(set(dados.keys()), set(['id', 'criatura', 'etiqueta']))
+
+    def test_verifica_conteudo_serializado_de_etiqueta_criaturas(self):
+        'Teste que verifica o conteúdo dos campos serializados de Etiquetas Criaturas'
+
+        dados = self.etiqueta.serializers.data
+
+        self.assertEqual(dados['id'], self.etiqueta.id)
+        self.assertEqual(dados['criatura'], self.etiqueta.criatura.id)
+        self.assertEqual(dados['etiqueta'], self.etiqueta.etiqueta)
 
 class SerializerAlbumCriaturasTestCase(TestCase):
     fixtures = ['dados_teste.json']
@@ -150,6 +173,31 @@ class SerializerLendasCriaturasTestCase(TestCase):
         self.assertEqual(dados['estoria'], self.lendas.estoria)
         self.assertEqual(dados['fonte'], self.lendas.fonte)
 
+class SerializerElementosTestCase(TestCase):
+    fixtures = ['dados_teste.json']
+
+    def setUp(self):
+        self.elemento = Elementos.objects.get(id=5)
+        self.elemento.serializers = ElementosSerializer(instance=self.elemento)
+
+    def test_verifica_campos_serializados_de_elementos(self):
+        'Teste que verifica os campos serializados de Elementos'
+
+        dados = self.elemento.serializers.data
+
+        self.assertEqual(set(dados.keys()), set(['id', 'elemento', 'tipo', 'descricao', 'foto_elemento']))
+
+    def test_verifica_conteudo_serializado_de_elementos(self):
+        'Teste que verifica o conteúdo dos campos serializados de Elementos'
+
+        dados = self.elemento.serializers.data
+
+        self.assertEqual(dados['id'], self.elemento.id)
+        self.assertEqual(dados['elemento'], self.elemento.elemento)
+        self.assertEqual(dados['tipo'], self.elemento.tipo)
+        self.assertEqual(dados['descricao'], self.elemento.descricao)
+        self.assertEqual(dados['foto_elemento'], self.elemento.foto_elemento.url)
+
 class SerializerListaAlbumPorCriaturaTestCase(TestCase):
     fixtures = ['dados_teste.json']
 
@@ -196,6 +244,28 @@ class SerializerListaLendasPorCriaturasSerializer(TestCase):
         self.assertEqual(dados['titulo'], self.lendas.titulo)
         self.assertEqual(dados['estoria'], self.lendas.estoria)
         self.assertEqual(dados['fonte'], self.lendas.fonte)
+
+class SerializerListaEtiquetaPorCriaturasSerializer(TestCase):
+    fixtures = ['dados_teste.json']
+
+    def setUp(self):
+        self.etiqueta = EtiquetasCriaturas.objects.get(id=9)
+        self.etiqueta.serializers = ListaEtiquetasPorCriaturaSerializer(instance=self.etiqueta)
+
+    def test_verifica_campos_serializados_de_lista_etiquetas_por_criaturas(self):
+        'Teste que verifica os campos serializados de Lista Etiquetas por Criaturas'
+
+        dados = self.etiqueta.serializers.data
+
+        self.assertEqual(set(dados.keys()), set(['nome_criatura', 'etiqueta']))
+
+    def test_verifica_conteudo_serializados_de_lista_etiqueta_por_criaturas(self):
+        'Teste que verifica o conteudo dos campos serializados de Lista Etiquetas por Criaturas'
+
+        dados = self.etiqueta.serializers.data
+
+        self.assertEqual(dados['nome_criatura'], self.etiqueta.criatura.criatura)
+        self.assertEqual(dados['etiqueta'], self.etiqueta.etiqueta)
 
 class SerializerCriaturasPorTipoTestCase(TestCase):
     fixtures = ['dados_teste.json']

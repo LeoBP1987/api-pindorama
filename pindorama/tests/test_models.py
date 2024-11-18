@@ -1,5 +1,5 @@
 from django.test import TestCase
-from pindorama.models import Tipos, Formas, Origens, Criaturas, AlbumCriaturas, LendasCriaturas
+from pindorama.models import Tipos, Formas, Origens, Criaturas, AlbumCriaturas, LendasCriaturas, EtiquetasCriaturas, Elementos
 from datetime import date
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.conf import settings
@@ -41,6 +41,7 @@ def cria_instancias_de_criatura(self):
             content_type='image/jpeg'
         ),
         descricao = 'Descrição de Criaturas Teste',
+        modo = 'Modo Teste',
         data_criacao = date.today()
     )
 
@@ -105,7 +106,34 @@ class ModelCriaturasTestCase(TestCase):
         self.assertEqual(self.criatura.origem.origem, 'OrigemTeste')
         self.assertTrue(self.criatura.foto_perfil.name.startswith(caminho_esperado_prefixo))
         self.assertEqual(self.criatura.descricao, 'Descrição de Criaturas Teste')
+        self.assertEqual(self.criatura.modo, 'Modo Teste')
         self.assertEqual(self.criatura.data_criacao, date.today())
+
+class ModelEtiquetasCriaturasTestCase(TestCase):
+    def setUp(self):
+        self.criatura = cria_instancias_de_criatura(self)
+
+        self.etiqueta = EtiquetasCriaturas.objects.create(
+            criatura = self.criatura,
+            etiqueta = 'Etiqueta Teste',
+            data_criacao = date.today()
+        )
+
+    def tearDown(self):
+        media_root = settings.MEDIA_ROOT
+        hoje = date.today()
+        diretorio_image = f'{media_root}\\foto_perfil\\{hoje.year}\\{str(hoje.month).zfill(2)}\\{str(hoje.day).zfill(2)}\\'
+        nome_arquivo = os.path.basename(self.criatura.foto_perfil.name)
+        imagem_teste_caminho = os.path.join(diretorio_image, nome_arquivo)
+        if os.path.exists(imagem_teste_caminho):
+            os.remove(imagem_teste_caminho)
+
+    def test_verifica_atributos_modelo_etiquetas_criaturas(self):
+        'Teste que verifica os atributos do modelo de Etiquetas das Criaturas'
+
+        self.assertEqual(self.etiqueta.criatura.criatura, 'CriaturaTeste')
+        self.assertEqual(self.etiqueta.etiqueta, 'Etiqueta Teste')
+        self.assertEqual(self.etiqueta.data_criacao, date.today())
 
 class ModelAlbumCriaturasTestCase(TestCase):
     def setUp(self):
@@ -131,9 +159,6 @@ class ModelAlbumCriaturasTestCase(TestCase):
         'Teste que verifica atributos do modelo de Album Criaturas'
 
         caminho_esperado_prefixo = f'album/{self.criatura.criatura.lower()}/{self.criatura.criatura.lower()}'
-
-        print(caminho_esperado_prefixo)
-        print(self.album.foto.name)
 
         self.assertEqual(self.album.criatura.criatura, 'CriaturaTeste')
         self.assertTrue(self.album.foto.name.startswith(caminho_esperado_prefixo))
@@ -169,3 +194,33 @@ class ModelLendasCriaturasTestCase(TestCase):
         self.assertEqual(self.lendas.estoria, 'Teste de lenda teste')
         self.assertEqual(self.lendas.fonte, 'Teste fonte lenda')
         self.assertEqual(self.lendas.data_criacao, date.today())
+
+class ModelElementosTestCase(TestCase):
+    def setUp(self):
+        self.elemento = Elementos.objects.create(
+            elemento = 'Elemento Teste',
+            tipo = 'Tipo Elemento Teste',
+            descricao = 'Descrição do Elemento Teste',
+            foto_elemento = SimpleUploadedFile(
+                name='foto_teste.jpg',
+                content=b'\x47\x49\x46\x38\x39\x61\x01\x00\x01\x00\x80\xff\x00\xff\xff\xff\x00\x00\x00\x21\xf9\x04\x01\x0a\x00\x01\x00\x2c\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x02\x44\x01\x00\x3b',
+                content_type='image/jpeg'
+            ),
+            data_criacao = date.today()
+        )
+
+    def tearDown(self):
+        media_root = settings.MEDIA_ROOT
+        if os.path.exists(media_root):
+            shutil.rmtree(media_root)
+
+    def test_verifica_atributos_modelo_elementos(self):
+        'Teste que verifica atributos do modelo de Elementos'
+
+        hoje = date.today()
+        caminho_esperado_prefixo = f'foto_elemento/{hoje.year}/{str(hoje.month).zfill(2)}/{str(hoje.day).zfill(2)}/foto_teste'
+
+        self.assertEqual(self.elemento.elemento, 'Elemento Teste')
+        self.assertEqual(self.elemento.tipo, 'Tipo Elemento Teste')
+        self.assertTrue(self.elemento.foto_elemento.name.startswith(caminho_esperado_prefixo))
+        self.assertEqual(self.elemento.data_criacao, date.today())

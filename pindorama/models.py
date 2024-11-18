@@ -25,6 +25,13 @@ class Origens(models.Model):
     def __str__(self):
         return self.origem
     
+MODOS = (
+    ('permanente', 'Permanente'),
+    ('periodico', 'Periódico'),
+    ('temporario', 'Temporário'),
+    ('metamorfico', 'Metamórfico')
+)
+    
 class Criaturas(models.Model):
     criatura = models.CharField(max_length=50)
     tipo = models.ForeignKey(
@@ -44,6 +51,7 @@ class Criaturas(models.Model):
     )
     foto_perfil = models.ImageField(upload_to='foto_perfil/%Y/%m/%d', blank=True, null=True)
     descricao = models.TextField()
+    modo = models.CharField(max_length=20, blank=True, null= True, choices=MODOS)
     data_criacao = models.DateField(auto_now_add=True)
 
     def __str__(self):
@@ -56,6 +64,18 @@ def upload_to_album(instance, filename):
     nome = nome_sem_acento.replace(" ", "-")
 
     return f'album/{nome}/{nome}-{cod}{filename[-4:]}'
+
+class EtiquetasCriaturas(models.Model):
+    criatura = models.ForeignKey(
+        to=Criaturas,
+        on_delete=models.CASCADE,
+        related_name='etiquetas'
+    )
+    etiqueta = models.CharField(max_length=20, blank=True, null=True)
+    data_criacao = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return self.etiqueta
     
 class AlbumCriaturas(models.Model):
     criatura = models.ForeignKey(
@@ -83,3 +103,13 @@ class LendasCriaturas(models.Model):
 
     def __str__(self):
         return self.titulo
+    
+class Elementos(models.Model):
+    elemento = models.CharField(max_length=100)
+    tipo = models.CharField(max_length=20)
+    descricao = models.TextField()
+    foto_elemento = models.ImageField(upload_to='foto_elemento/%Y/%m/%d')
+    data_criacao = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return self.elemento

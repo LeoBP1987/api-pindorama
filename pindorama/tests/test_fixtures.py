@@ -1,5 +1,5 @@
 from django.test import TestCase
-from pindorama.models import Tipos, Formas, Origens, Criaturas, AlbumCriaturas, LendasCriaturas
+from pindorama.models import Tipos, Formas, Origens, Criaturas, AlbumCriaturas, LendasCriaturas, EtiquetasCriaturas, Elementos
 
 class FixturesTests(TestCase):
 
@@ -14,10 +14,14 @@ class FixturesTests(TestCase):
         criatura = Criaturas.objects.get(pk=10)
         album = AlbumCriaturas.objects.get(pk=2)
         lenda = LendasCriaturas.objects.get(pk=5)
+        etiqueta = EtiquetasCriaturas.objects.get(pk=9)
+        elemento = Elementos.objects.get(pk=1)
 
-        self.assertEqual(tipo.tipo, 'Sit.')
-        self.assertEqual(forma.descricao, 'Iste nihil officia assumenda. Dolores quas itaque officia a placeat eum eum.\nCum delectus aperiam quis quos quos. Modi ad laboriosam sit eveniet natus.')
-        self.assertEqual(origem.origem, 'Sapiente optio quas.')
-        self.assertEqual(criatura.tipo.id, 2)
-        self.assertEqual(album.fonte, 'Ipsum laborum.')
-        self.assertEqual(lenda.data_criacao.strftime('%Y-%m-%d'), '2020-03-27')
+        self.assertEqual(tipo.tipo, 'Ullam.')
+        self.assertEqual(forma.descricao, 'Mollitia amet animi nisi. Deserunt labore deleniti. Eaque quo iure incidunt delectus nihil.')
+        self.assertEqual(origem.origem, 'Odio perferendis.')
+        self.assertEqual(criatura.tipo.id, 1)
+        self.assertEqual(album.fonte, 'In perferendis.')
+        self.assertEqual(lenda.data_criacao.strftime('%Y-%m-%d'), '2009-03-28')
+        self.assertEqual(etiqueta.etiqueta, 'Quas odio ut sit.')
+        self.assertEqual(elemento.descricao, 'Officiis corporis molestiae porro harum ullam optio. Excepturi culpa quidem ducimus tenetur voluptatum. Nostrum ad quis dolorem hic.\nSuscipit ad porro veniam accusamus a veniam. In hic eius vitae.')
