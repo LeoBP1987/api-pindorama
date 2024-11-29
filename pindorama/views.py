@@ -5,6 +5,7 @@ from pindorama.serializers import TiposSerializer, FormasSerializer, OrigensSeri
     ListaLendasPorCriaturasSerializer, CriaturasPorTipoSerializers, CriaturasPorFormaSerializers, \
     CriaturasPorOrigemSerializers, EtiquetasCriaturasSerializer, ElementosSerializer
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 class TipoViewSet(viewsets.ModelViewSet):
     queryset = Tipos.objects.all().order_by('tipo')
