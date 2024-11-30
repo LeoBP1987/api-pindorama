@@ -18,9 +18,13 @@ class OrigensSerializer(serializers.ModelSerializer):
         fields = ('id', 'origem', 'descricao')
 
 class CriaturasSerializer(serializers.ModelSerializer):
+    tipo_nome = serializers.ReadOnlyField(source = 'tipo.tipo')
+    forma_nome = serializers.ReadOnlyField(source = 'forma.forma')
+    origem_nome = serializers.ReadOnlyField(source = 'origem.origem')
+
     class Meta:
         model = Criaturas
-        fields = ('id', 'criatura', 'tipo', 'forma', 'origem', 'foto_perfil', 'descricao', 'modo')
+        fields = ('id', 'criatura', 'tipo_nome', 'forma_nome', 'origem_nome', 'foto_perfil', 'descricao', 'modo')    
 
 class AlbumCriaturasSerializer(serializers.ModelSerializer):
     class Meta:

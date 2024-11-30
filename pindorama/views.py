@@ -33,6 +33,7 @@ class CriaturasViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
     ordering_fields = ['criatura', ]
     search_fields = ['criatura', 'tipo', 'forma', 'origem', ]
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
 class EtiquetasCriaturasViewSet(viewsets.ModelViewSet):
     queryset = EtiquetasCriaturas.objects.all().order_by('criatura')
