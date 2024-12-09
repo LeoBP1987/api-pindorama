@@ -24,7 +24,7 @@ class CriaturasSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Criaturas
-        fields = ('id', 'criatura', 'tipo_nome', 'forma_nome', 'origem_nome', 'foto_perfil', 'descricao', 'modo')    
+        fields = ('id', 'criatura', 'tipo', 'tipo_nome', 'forma', 'forma_nome', 'origem', 'origem_nome', 'foto_perfil', 'descricao', 'modo')    
 
 class AlbumCriaturasSerializer(serializers.ModelSerializer):
     class Meta:
@@ -54,14 +54,19 @@ class ElementosSerializer(serializers.ModelSerializer):
         model = Elementos
         fields = ('id', 'elemento', 'tipo', 'descricao', 'foto_elemento')
 
+
 class ListaAlbumPorCriaturaSerializer(serializers.ModelSerializer):
+    id = serializers.SerializerMethodField()
     nome_criatura = serializers.ReadOnlyField(source = 'criatura.criatura')
     foto = serializers.SerializerMethodField()
     fonte = serializers.SerializerMethodField()
 
     class Meta:
         model = AlbumCriaturas
-        fields = ('nome_criatura', 'foto', 'fonte')
+        fields = ('id', 'nome_criatura', 'foto', 'fonte')
+
+    def get_id(self, obj):
+        return obj.id
 
     def get_foto(self, obj):
         return obj.foto.url if obj.foto else None
@@ -70,6 +75,7 @@ class ListaAlbumPorCriaturaSerializer(serializers.ModelSerializer):
         return obj.fonte
     
 class ListaLendasPorCriaturasSerializer(serializers.ModelSerializer):
+    id = serializers.SerializerMethodField()
     nome_criatura = serializers.ReadOnlyField(source = 'criatura.criatura')
     titulo = serializers.SerializerMethodField()
     estoria = serializers.SerializerMethodField()
@@ -77,7 +83,10 @@ class ListaLendasPorCriaturasSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = LendasCriaturas
-        fields = ('nome_criatura', 'titulo', 'estoria', 'fonte')
+        fields = ('id', 'nome_criatura', 'titulo', 'estoria', 'fonte')
+
+    def get_id(self, obj):
+        return obj.id
 
     def get_titulo(self, obj):
         return obj.titulo
@@ -89,26 +98,35 @@ class ListaLendasPorCriaturasSerializer(serializers.ModelSerializer):
         return obj.fonte
     
 class ListaEtiquetasPorCriaturaSerializer(serializers.ModelSerializer):
+    id = serializers.SerializerMethodField()
     nome_criatura = serializers.ReadOnlyField(source = 'criatura.criatura')
     etiqueta = serializers.SerializerMethodField()
 
     class Meta:
         model = AlbumCriaturas
-        fields = ('nome_criatura', 'etiqueta')
+        fields = ('id', 'nome_criatura', 'etiqueta')
 
     def get_etiqueta(self, obj):
         return obj.etiqueta
     
+    def get_id(self, obj):
+        return obj.id
+    
 class CriaturasPorTipoSerializers(serializers.ModelSerializer):
+    id = serializers.SerializerMethodField()
     criatura = serializers.SerializerMethodField()
-    forma = serializers.ReadOnlyField(source = 'forma.forma')
-    origem = serializers.ReadOnlyField(source = 'origem.origem')
+    tipo_nome = serializers.ReadOnlyField(source = 'tipo.tipo')
+    forma_nome = serializers.ReadOnlyField(source = 'forma.forma')
+    origem_nome = serializers.ReadOnlyField(source = 'origem.origem')
     descricao = serializers.SerializerMethodField()
     foto_perfil = serializers.SerializerMethodField()
 
     class Meta:
         model = Criaturas
-        fields = ('criatura', 'forma', 'origem', 'descricao', 'foto_perfil')
+        fields = ('id', 'criatura', 'tipo_nome', 'forma_nome', 'origem_nome', 'descricao', 'foto_perfil')
+
+    def get_id(self, obj):
+        return obj.id
 
     def get_criatura(self, obj):
         return obj.criatura
@@ -120,15 +138,20 @@ class CriaturasPorTipoSerializers(serializers.ModelSerializer):
         return obj.foto_perfil.url if obj.foto_perfil else None
     
 class CriaturasPorFormaSerializers(serializers.ModelSerializer):
+    id = serializers.SerializerMethodField()
     criatura = serializers.SerializerMethodField()
-    tipo = serializers.ReadOnlyField(source = 'tipo.tipo')
-    origem = serializers.ReadOnlyField(source = 'origem.origem')
+    tipo_nome = serializers.ReadOnlyField(source = 'tipo.tipo')
+    forma_nome = serializers.ReadOnlyField(source = 'forma.forma')
+    origem_nome = serializers.ReadOnlyField(source = 'origem.origem')
     descricao = serializers.SerializerMethodField()
     foto_perfil = serializers.SerializerMethodField()
 
     class Meta:
         model = Criaturas
-        fields = ('criatura', 'tipo', 'origem', 'descricao', 'foto_perfil')
+        fields = ('id', 'criatura', 'tipo_nome', 'forma_nome', 'origem_nome', 'descricao', 'foto_perfil')
+
+    def get_id(self, obj):
+        return obj.id
 
     def get_criatura(self, obj):
         return obj.criatura
@@ -140,15 +163,17 @@ class CriaturasPorFormaSerializers(serializers.ModelSerializer):
         return obj.foto_perfil.url if obj.foto_perfil else None
     
 class CriaturasPorOrigemSerializers(serializers.ModelSerializer):
+    id = serializers.SerializerMethodField()
     criatura = serializers.SerializerMethodField()
     tipo = serializers.ReadOnlyField(source = 'tipo.tipo')
     forma = serializers.ReadOnlyField(source = 'forma.forma')
+    origem_nome = serializers.ReadOnlyField(source = 'origem.origem')
     descricao = serializers.SerializerMethodField()
     foto_perfil = serializers.SerializerMethodField()
 
     class Meta:
         model = Criaturas
-        fields = ('criatura', 'tipo', 'forma', 'descricao', 'foto_perfil')
+        fields = ('id', 'criatura', 'tipo_nome', 'forma_nome', 'origem_nome', 'descricao', 'foto_perfil')
 
     def get_criatura(self, obj):
         return obj.criatura
@@ -158,3 +183,21 @@ class CriaturasPorOrigemSerializers(serializers.ModelSerializer):
     
     def get_foto_perfil(self, obj):
         return obj.foto_perfil.url if obj.foto_perfil else None
+    
+class ListaCriaturasPorEtiquetaSerializers(serializers.ModelSerializer):
+    etiqueta = serializers.SerializerMethodField()
+    criatura = serializers.ReadOnlyField(source = 'criatura.criatura')
+    id = serializers.ReadOnlyField(source = 'criatura.id')
+    tipo_nome = serializers.ReadOnlyField(source = 'criatura.tipo.tipo')
+    forma_nome = serializers.ReadOnlyField(source = 'criatura.forma.forma')
+    origem_nome = serializers.ReadOnlyField(source = 'criatura.origem.origem')
+    foto_perfil = serializers.ReadOnlyField(source = 'criatura.foto_perfil.url')
+    descricao = serializers.ReadOnlyField(source = 'criatura.descricao')
+    modo = serializers.ReadOnlyField(source = 'criatura.modo')
+
+    class Meta:
+        model = AlbumCriaturas
+        fields = ('etiqueta', 'criatura', 'id', 'tipo_nome', 'forma_nome', 'origem_nome', 'foto_perfil', 'descricao', 'modo')
+
+    def get_etiqueta(self, obj):
+        return obj.etiqueta

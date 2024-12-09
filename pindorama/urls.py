@@ -3,7 +3,8 @@ from rest_framework import routers
 from pindorama.views import TipoViewSet, FormasViewSet, OrigensViewSet, CriaturasViewSet, \
                     AlbumCriaturasViewSet, LendasCriaturasViewSet, ListaAlbumPorCriaturaViewSet, \
                     ListaLendasPorCriaturaViewSet, CriaturasPorTipoViewSet, CriaturasPorFormaViewSet, \
-                    CriaturasPorOrigemViewSet, EtiquetasCriaturasViewSet, ElementosViewSet, ListaEtiquetasPorCriaturaViewSet
+                    CriaturasPorOrigemViewSet, EtiquetasCriaturasViewSet, ElementosViewSet, \
+                    ListaEtiquetasPorCriaturaViewSet, ListaCriaturasPorEtiquetasViewSet
 
 
 router = routers.DefaultRouter()
@@ -24,5 +25,6 @@ urlpatterns = [
     path('etiquetas/<int:id>/criaturas/', ListaEtiquetasPorCriaturaViewSet.as_view()),
     path('criaturas/<int:id>/tipo/', CriaturasPorTipoViewSet.as_view()),
     path('criaturas/<int:id>/forma/', CriaturasPorFormaViewSet.as_view()),
-    path('criaturas/<int:id>/origem/', CriaturasPorOrigemViewSet.as_view())
+    path('criaturas/<int:id>/origem/', CriaturasPorOrigemViewSet.as_view()),
+    path('etiquetas/<str:etiqueta>/criaturas/', ListaCriaturasPorEtiquetasViewSet.as_view())
 ]

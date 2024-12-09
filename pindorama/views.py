@@ -2,10 +2,9 @@ from rest_framework import viewsets, generics, filters
 from pindorama.models import Tipos, Formas, Origens, Criaturas, AlbumCriaturas, LendasCriaturas, EtiquetasCriaturas, Elementos
 from pindorama.serializers import TiposSerializer, FormasSerializer, OrigensSerializer, CriaturasSerializer, \
     AlbumCriaturasSerializer, LendasCriaturasSerializer, ListaAlbumPorCriaturaSerializer, \
-    ListaLendasPorCriaturasSerializer, CriaturasPorTipoSerializers, CriaturasPorFormaSerializers, \
-    CriaturasPorOrigemSerializers, EtiquetasCriaturasSerializer, ElementosSerializer
+    ListaLendasPorCriaturasSerializer, CriaturasPorTipoSerializers, CriaturasPorFormaSerializers, ListaEtiquetasPorCriaturaSerializer, \
+    CriaturasPorOrigemSerializers, EtiquetasCriaturasSerializer, ElementosSerializer, ListaCriaturasPorEtiquetaSerializers
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 class TipoViewSet(viewsets.ModelViewSet):
     queryset = Tipos.objects.all().order_by('tipo')
@@ -33,7 +32,6 @@ class CriaturasViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
     ordering_fields = ['criatura', ]
     search_fields = ['criatura', 'tipo', 'forma', 'origem', ]
-    permission_classes = [IsAuthenticatedOrReadOnly]
 
 class EtiquetasCriaturasViewSet(viewsets.ModelViewSet):
     queryset = EtiquetasCriaturas.objects.all().order_by('criatura')
@@ -85,7 +83,7 @@ class ListaEtiquetasPorCriaturaViewSet(generics.ListAPIView):
         queryset = EtiquetasCriaturas.objects.filter(criatura_id=self.kwargs['id']).order_by('id')
         return queryset
     
-    serializer_class = ListaLendasPorCriaturasSerializer
+    serializer_class = ListaEtiquetasPorCriaturaSerializer
 
 class CriaturasPorTipoViewSet(generics.ListAPIView):
 
@@ -110,3 +108,10 @@ class CriaturasPorOrigemViewSet(generics.ListAPIView):
         return queryset
     
     serializer_class = CriaturasPorOrigemSerializers
+
+class ListaCriaturasPorEtiquetasViewSet(generics.ListAPIView):
+    def get_queryset(self):
+        queryset = EtiquetasCriaturas.objects.filter(etiqueta=self.kwargs['etiqueta']).order_by('id')
+        return queryset
+    
+    serializer_class = ListaCriaturasPorEtiquetaSerializers
