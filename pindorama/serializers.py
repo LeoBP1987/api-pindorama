@@ -165,8 +165,8 @@ class CriaturasPorFormaSerializers(serializers.ModelSerializer):
 class CriaturasPorOrigemSerializers(serializers.ModelSerializer):
     id = serializers.SerializerMethodField()
     criatura = serializers.SerializerMethodField()
-    tipo = serializers.ReadOnlyField(source = 'tipo.tipo')
-    forma = serializers.ReadOnlyField(source = 'forma.forma')
+    tipo_nome = serializers.ReadOnlyField(source = 'tipo.tipo')
+    forma_nome = serializers.ReadOnlyField(source = 'forma.forma')
     origem_nome = serializers.ReadOnlyField(source = 'origem.origem')
     descricao = serializers.SerializerMethodField()
     foto_perfil = serializers.SerializerMethodField()
