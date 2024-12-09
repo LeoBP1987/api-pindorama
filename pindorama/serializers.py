@@ -175,6 +175,9 @@ class CriaturasPorOrigemSerializers(serializers.ModelSerializer):
         model = Criaturas
         fields = ('id', 'criatura', 'tipo_nome', 'forma_nome', 'origem_nome', 'descricao', 'foto_perfil')
 
+    def get_id(self, obj):
+        return obj.id
+
     def get_criatura(self, obj):
         return obj.criatura
     
