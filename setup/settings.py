@@ -136,20 +136,22 @@ else :
         "default": {
             "BACKEND": "storages.backends.s3.S3Storage",
             "OPTIONS": {
-                "access_key": str(os.getenv("AWS_ACCESS_KEY_ID")),
-                "secret_key": str(os.getenv("AWS_SECRET_ACCESS_KEY")),
-                "bucket_name": str(os.getenv("AWS_STORAGE_BUCKET_NAME")),
-                "custom_domain": f"{str(os.getenv("AWS_STORAGE_BUCKET_NAME"))}.s3.amazonaws.com",
+                "access_key": str(os.getenv("R2_ACCESS_KEY_ID")),
+                "secret_key": str(os.getenv("R2_SECRET_ACCESS_KEY")),
+                "bucket_name": str(os.getenv("R2_STORAGE_BUCKET_NAME")),
+                "endpoint_url": "https://626ebd951efc663e718a48a8fcc0dce5.r2.cloudflarestorage.com/",
+                "custom_domain": "pub-fea55699756d486f8aa6fd94cd7ef0fa.r2.dev",
                 "location": "static",  
             },
         },
         "staticfiles": {
             "BACKEND": "storages.backends.s3.S3Storage",
             "OPTIONS": {
-                "access_key": str(os.getenv("AWS_ACCESS_KEY_ID")),
-                "secret_key": str(os.getenv("AWS_SECRET_ACCESS_KEY")),
-                "bucket_name": str(os.getenv("AWS_STORAGE_BUCKET_NAME")),
-                "custom_domain": f"{str(os.getenv("AWS_STORAGE_BUCKET_NAME"))}.s3.amazonaws.com",
+                "access_key": str(os.getenv("R2_ACCESS_KEY_ID")),
+                "secret_key": str(os.getenv("R2_SECRET_ACCESS_KEY")),
+                "bucket_name": str(os.getenv("R2_STORAGE_BUCKET_NAME")),
+                "endpoint_url": "https://626ebd951efc663e718a48a8fcc0dce5.r2.cloudflarestorage.com/",
+                "custom_domain": "pub-fea55699756d486f8aa6fd94cd7ef0fa.r2.dev",
                 "location": "static", 
             },
         },
@@ -169,9 +171,9 @@ else :
         'Access-Control-Allow-Origin': '*',
     }
 
-    STATIC_URL = 'https://pindorama-s3.s3.amazonaws.com/static/'
+    STATIC_URL = 'https://pub-fea55699756d486f8aa6fd94cd7ef0fa.r2.dev/static/'
 
-    MEDIA_URL = 'https://pindorama-s3.s3.amazonaws.com/media/'
+    MEDIA_URL = 'https://pub-fea55699756d486f8aa6fd94cd7ef0fa.r2.dev/media/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -182,9 +184,6 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.BasicAuthentication',
     ],
-    # 'DEFAULT_PERMISSION_CLASSES': [
-    #     'rest_framework.permissions.IsAuthenticated',
-    # ],
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
 }
 
@@ -192,8 +191,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5500",
     "http://127.0.0.1:5500",
     "http://localhost:5173",
-    "http://127.0.0.1:5173/",
+    "http://127.0.0.1:5173",
     "http://localhost:4173",
-    "http://127.0.0.1:4173/",
-    "https://pindorama-front.vercel.app/"
+    "http://127.0.0.1:4173",
+    "https://pindorama-front.vercel.app"
 ]
