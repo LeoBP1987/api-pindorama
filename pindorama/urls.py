@@ -4,8 +4,8 @@ from pindorama.views import TipoViewSet, FormasViewSet, OrigensViewSet, Criatura
                     AlbumCriaturasViewSet, LendasCriaturasViewSet, ListaAlbumPorCriaturaViewSet, \
                     ListaLendasPorCriaturaViewSet, CriaturasPorTipoViewSet, CriaturasPorFormaViewSet, \
                     CriaturasPorOrigemViewSet, EtiquetasCriaturasViewSet, ElementosViewSet, \
-                    ListaEtiquetasPorCriaturaViewSet, ListaCriaturasPorEtiquetasViewSet
-
+                    ListaEtiquetasPorCriaturaViewSet, ListaCriaturasPorEtiquetasViewSet, LoginViewSet, \
+                    LogoutViewSet
 
 router = routers.DefaultRouter()
 router.register('tipos', TipoViewSet, basename='Tipos')
@@ -16,6 +16,7 @@ router.register('album', AlbumCriaturasViewSet, basename='Album')
 router.register('lendas', LendasCriaturasViewSet, basename='Lendas')
 router.register('etiquetas', EtiquetasCriaturasViewSet, basename='Etiquetas')
 router.register('elementos', ElementosViewSet, basename='Elementos')
+router.register('login', LoginViewSet, basename='Login')
 
 
 urlpatterns = [
@@ -26,5 +27,6 @@ urlpatterns = [
     path('criaturas/<int:id>/tipo/', CriaturasPorTipoViewSet.as_view()),
     path('criaturas/<int:id>/forma/', CriaturasPorFormaViewSet.as_view()),
     path('criaturas/<int:id>/origem/', CriaturasPorOrigemViewSet.as_view()),
-    path('etiquetas/<str:etiqueta>/criaturas/', ListaCriaturasPorEtiquetasViewSet.as_view())
+    path('etiquetas/<str:etiqueta>/criaturas/', ListaCriaturasPorEtiquetasViewSet.as_view()),
+    path('logout/', LogoutViewSet.as_view(), name='logout')
 ]

@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from pindorama.models import Tipos, Formas, Origens, Criaturas, AlbumCriaturas, LendasCriaturas, EtiquetasCriaturas, Elementos
 from pindorama.validators import nome_invalido
+from django.contrib.auth import authenticate
 
 class TiposSerializer(serializers.ModelSerializer):
     class Meta:
@@ -204,3 +205,13 @@ class ListaCriaturasPorEtiquetaSerializers(serializers.ModelSerializer):
 
     def get_etiqueta(self, obj):
         return obj.etiqueta
+    
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField(max_length=150)
+    password = serializers.CharField(max_length=128, write_only=True)
+
+    def validate(self, data):
+        user = authenticate(username=data['username'], password=data['password'])
+        if not user:
+            raise serializers.ValidationError("Credenciais inválidas")
+        return user
