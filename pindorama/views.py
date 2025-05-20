@@ -146,6 +146,8 @@ class LoginViewSet(viewsets.ViewSet):
         password = request.data.get('password')
         
         user = authenticate(request, username=username, password=password)
+
+        print("Chamou")
         
         if user is not None:
             refresh = RefreshToken.for_user(user)
