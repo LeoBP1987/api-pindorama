@@ -25,7 +25,7 @@ A **API Pindorama** é o motor que move o ecossistema do projeto [Pindorama](htt
 
 ## 🚀 Principais Funcionalidades
 
-- 🔒 **Autenticação JWT**
+- 🔒 **Autenticação OAuth02**
 - 📦 **CRUD completo**
 - ⚡ **Performance otimizada**
 - 🛡️ **Segurança robusta**
@@ -36,27 +36,11 @@ A **API Pindorama** é o motor que move o ecossistema do projeto [Pindorama](htt
 
 ## 🛠️ Tecnologias
 
-- Node.js, Express *(ajuste se necessário)*
-- Banco de Dados: MongoDB ou PostgreSQL
-- JWT para autenticação
-- Docker (opcional)
+- Banco de Dados: PostgreSQL
+- OAuth02 para autenticação
 - Testes automatizados
 
 ---
-
-## 📲 Exemplos de Uso
-
-```bash
-# Listar recursos
-curl -X GET https://suaapi.com.br/api/recursos
-
-# Criar novo recurso
-curl -X POST https://suaapi.com.br/api/recursos \
-  -H "Authorization: Bearer <seu_token>" \
-  -d '{ "nome": "Exemplo", "descricao": "Descrição aqui..." }'
-```
-
-- Explore a documentação interativa em: `/docs`
 
 ---
 
@@ -64,16 +48,6 @@ curl -X POST https://suaapi.com.br/api/recursos \
 
 O frontend do projeto está em:  
 👉 [https://github.com/LeoBP1987/pindorama](https://github.com/LeoBP1987/pindorama)
-
----
-
-## 🤝 Como contribuir
-
-1. Faça um fork do projeto
-2. Crie uma branch: `git checkout -b minha-feature`
-3. Adicione suas modificações e faça commit: `git commit -m 'feat: Minha nova feature'`
-4. Push na sua branch: `git push origin minha-feature`
-5. Abra um Pull Request 🚀
 
 ---
 
